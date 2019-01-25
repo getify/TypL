@@ -1,0 +1,21 @@
+{
+	"name": "typval",
+	"version": "0.0.1",
+	"description": "Optional type annotations for JS values",
+	"devDependencies": {
+		"coveralls": "~3.0.2",
+		"qunit": "~2.9.1",
+		"terser": "~3.14.1"
+	},
+	"repository": "getify/typval",
+	"keywords": [
+		"types"
+	],
+	"bugs": {
+		"url": "https://github.com/getify/typval/issues",
+		"email": "getify@gmail.com"
+	},
+	"homepage": "https://github.com/getify/typval",
+	"author": "Kyle Simpson <getify@gmail.com>",
+	"license": "MIT"
+}
