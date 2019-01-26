@@ -1,7 +1,21 @@
 {
 	"name": "typval",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Optional type annotations for JS values",
+	"main": "./dist/typval.js",
+	"scripts": {
+		"test": "node scripts/node-tests.js",
+		"test:dist": "TEST_DIST=true npm test",
+		"test:package": "TEST_PACKAGE=true npm test",
+		"test:all": "npm test && npm run test:dist && npm run test:package",
+		"coverage": "istanbul cover scripts/node-tests.js",
+		"coverage:report": "npm run coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+		"build-core": "node scripts/build-core.js",
+		"build": "npm run build-core",
+		"prepare": "npm run build",
+		"prepublish": "npm run build && npm run test:all",
+		"publish": "npm run coverage:report"
+	},
 	"devDependencies": {
 		"coveralls": "~3.0.2",
 		"qunit": "~2.9.1",

@@ -108,7 +108,7 @@
 	function bigint(...v) {
 		v = getVal(v);
 		if (typeof v == "string") {
-			let t = safeEval(v);
+			v = safeEval(v);
 		}
 		if (typeof v != "bigint") {
 			failedTypeAssertion(v,"bigint");
