@@ -6,7 +6,7 @@
 	"use strict";
 
 	return {
-		undef, nul, string, bool, number, finite, int, bigint,
+		undef, nul, string, bool, number, finite, int, bint,
 		float, symb, array, object, func,
 	};
 
@@ -105,7 +105,7 @@
 		return v;
 	}
 
-	function bigint(...v) {
+	function bint(...v) {
 		v = getVal(v);
 		if (typeof v == "string") {
 			v = safeEval(v);
@@ -238,7 +238,15 @@
 	}
 
 	function failedTypeAssertion(v,expectedType) {
-		throw new Error(`${typeof v == "string" ? `'${v}'` : v} is not ${expectedType}`);
+		var t;
+		try {
+			t = String(v);
+		}
+		catch (e) {
+			t = "*";
+		}
+
+		throw new Error(`${typeof v == "string" ? `'${t}'` : t} is not ${expectedType}`);
 	}
 
 });
