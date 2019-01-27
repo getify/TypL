@@ -120,11 +120,11 @@
 		v = getVal(v);
 		if (typeof v == "string") {
 			let t = strToNum(v);
-			if (!isNaN(t) && Number.isFinite(t) && !Number.isInteger(t)) {
+			if (Number.isFinite(t) && !Number.isInteger(t)) {
 				v = t;
 			}
 		}
-		if (isNaN(v) || !Number.isFinite(v) || Number.isInteger(v)) {
+		if (!Number.isFinite(v) || Number.isInteger(v)) {
 			failedTypeAssertion(v,"float");
 		}
 		return v;
