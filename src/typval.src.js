@@ -7,7 +7,7 @@
 
 	return {
 		undef, nul, string, bool, number, finite, int, bint,
-		float, symb, array, object, func,
+		symb, array, object, func,
 	};
 
 
@@ -66,7 +66,7 @@
 			if (v === "NaN") v = NaN;
 			else {
 				let t = strToNum(v);
-				if (typeof t == "number" && !isNaN(t)) {
+				if (typeof t == "number" && !Number.isNaN(t)) {
 					v = t;
 				}
 			}
@@ -112,20 +112,6 @@
 		}
 		if (typeof v != "bigint") {
 			failedTypeAssertion(v,"bigint");
-		}
-		return v;
-	}
-
-	function float(...v) {
-		v = getVal(v);
-		if (typeof v == "string") {
-			let t = strToNum(v);
-			if (Number.isFinite(t) && !Number.isInteger(t)) {
-				v = t;
-			}
-		}
-		if (!Number.isFinite(v) || Number.isInteger(v)) {
-			failedTypeAssertion(v,"float");
 		}
 		return v;
 	}

@@ -1,7 +1,7 @@
 "use strict";
 
 QUnit.test( "API", function test(assert){
-	assert.expect( 13 );
+	assert.expect( 12 );
 
 	assert.ok( _isFunction( nul ), "nul(..)" );
 	assert.ok( _isFunction( undef ), "undef(..)" );
@@ -11,7 +11,6 @@ QUnit.test( "API", function test(assert){
 	assert.ok( _isFunction( finite ), "finite(..)" );
 	assert.ok( _isFunction( int ), "int(..)" );
 	assert.ok( _isFunction( bint ), "bint(..)" );
-	assert.ok( _isFunction( float ), "float(..)" );
 	assert.ok( _isFunction( symb ), "symb(..)" );
 	assert.ok( _isFunction( array ), "array(..)" );
 	assert.ok( _isFunction( object ), "object(..)" );
@@ -590,87 +589,6 @@ QUnit.test( "bint(..)", function test(assert){
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
 	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
 	assert.strictEqual( yActual, yExpected, "failed: floating point" );
-	assert.strictEqual( zActual, zExpected, "failed: string value" );
-} );
-
-QUnit.test( "float(..)", function test(assert){
-	var rExpected = 3.14;
-	var pExpected = 3.14;
-	var qExpected = 3.14;
-	var tExpected = 3.14;
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
-	var yExpected = "failed 3";
-	var zExpected = "failed 4";
-
-	var rActual = float`3.14`;
-	var pActual = float`${3.14}`;
-	var qActual = float` \n 3.14 \t `;
-	var tActual = float` \n ${3.14} \t `;
-	var sActual;
-	try {
-		sActual = float` x ${3.14} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
-	var uActual;
-	try {
-		uActual = float` x ${Object.create(null)} y `;
-	}
-	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
-	}
-	var vActual;
-	try {
-		vActual = float`${3.14} ${3.14}`;
-	}
-	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
-	}
-	var wActual;
-	try {
-		wActual = float`threepointonefour`;
-	}
-	catch (e) {
-		wActual = (!/invalid/i.test(e) ? "failed 1" : e.toString());
-	}
-	var xActual;
-	try {
-		xActual = float``;
-	}
-	catch (e) {
-		xActual = (!/invalid/i.test(e) ? "failed 2" : e.toString());
-	}
-	var yActual;
-	try {
-		yActual = float`${42}`;
-	}
-	catch (e) {
-		yActual = (!/invalid/i.test(e) ? "failed 3" : e.toString());
-	}
-	var zActual;
-	try {
-		zActual = float`${"hello"}`;
-	}
-	catch (e) {
-		zActual = (!/invalid/i.test(e) ? "failed 4" : e.toString());
-	}
-
-	assert.expect( 11 );
-	assert.strictEqual( rActual, rExpected, "literal" );
-	assert.strictEqual( pActual, pExpected, "value" );
-	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
-	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
-	assert.strictEqual( yActual, yExpected, "failed: integer" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
 
