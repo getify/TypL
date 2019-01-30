@@ -1,8 +1,9 @@
 "use strict";
 
 QUnit.test( "API", function test(assert){
-	assert.expect( 12 );
+	assert.expect( 13 );
 
+	assert.ok( _isFunction( any ), "any(..)" );
 	assert.ok( _isFunction( nul ), "nul(..)" );
 	assert.ok( _isFunction( undef ), "undef(..)" );
 	assert.ok( _isFunction( string ), "string(..)" );
@@ -15,6 +16,24 @@ QUnit.test( "API", function test(assert){
 	assert.ok( _isFunction( array ), "array(..)" );
 	assert.ok( _isFunction( object ), "object(..)" );
 	assert.ok( _isFunction( func ), "func(..)" );
+} );
+
+QUnit.test( "any(..)", function test(assert){
+	var rExpected = "hello world";
+	var pExpected = 42;
+	var qExpected = " hello 42 \ntrue! ";
+	var tExpected = "";
+
+	var rActual = any`hello world`;
+	var pActual = any`${42}`;
+	var qActual = any` hello ${42} \n${true}! `;
+	var tActual = any``;
+
+	assert.expect( 4 );
+	assert.strictEqual( rActual, rExpected, "literal" );
+	assert.strictEqual( pActual, pExpected, "value" );
+	assert.strictEqual( qActual, qExpected, "multiple strings/values" );
+	assert.strictEqual( tActual, tExpected, "empty string" );
 } );
 
 QUnit.test( "undef(..)", function test(assert){

@@ -6,12 +6,28 @@
 	"use strict";
 
 	return {
-		undef, nul, string, bool, number, finite, int, bint,
+		any, undef, nul, string, bool, number, finite, int, bint,
 		symb, array, object, func,
 	};
 
 
 	// ***********************************
+
+	function any(s,...v) {
+		if (s.length == 1) {
+			return s[0];
+		}
+		else if (
+			s.length > 2 ||
+			s[0].length > 0 ||
+			s[1].length > 0
+		) {
+			return String.raw({ raw: s, },...v);
+		}
+		else {
+			return v[0];
+		}
+	}
 
 	function undef(...v) {
 		v = getVal(v);
@@ -236,15 +252,3 @@
 	}
 
 });
-
-// console.log( nul`null` );
-// console.log( undef`undefined` );
-// console.log( string`  hello world  ` );
-// console.log( bool`true` );
-// console.log( number`3.14` );
-// console.log( finite`100.1` );
-// console.log( int`42` );
-// console.log( float`12.6` );
-// console.log( array`[1,2,3]` );
-// console.log( object`{"a":2,b:3}` );
-// console.log( func`x => x * 2` );
