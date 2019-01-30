@@ -1,6 +1,6 @@
 {
 	"name": "typval",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Optional type annotations for JS values",
 	"main": "./dist/typval.js",
 	"scripts": {

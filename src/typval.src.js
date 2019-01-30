@@ -7,22 +7,22 @@
 
 	return {
 		any, undef, nul, string, bool, number, finite, int, bint,
-		symb, array, object, func,
+		symb, array, object, func, regex,
 	};
 
 
 	// ***********************************
 
-	function any(s,...v) {
-		if (s.length == 1) {
-			return s[0];
+	function any(strs,...v) {
+		if (strs.length == 1) {
+			return strs[0];
 		}
 		else if (
-			s.length > 2 ||
-			s[0].length > 0 ||
-			s[1].length > 0
+			strs.length > 2 ||
+			strs[0].length > 0 ||
+			strs[1].length > 0
 		) {
-			return String.raw({ raw: s, },...v);
+			return String.raw({ raw: strs, },...v);
 		}
 		else {
 			return v[0];
@@ -30,7 +30,7 @@
 	}
 
 	function undef(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string" && v === "undefined") {
 			v = undefined;
 		}
@@ -41,7 +41,7 @@
 	}
 
 	function nul(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string" && v === "null") {
 			v = null;
 		}
@@ -52,20 +52,23 @@
 	}
 
 	function string(strs,...v) {
-		checkValidity([strs,...v]);
 		if (strs.length == 1) {
 			return strs[0];
 		}
 		else {
-			if (typeof v[0] != "string") {
-				failedTypeAssertion(v[0],"string");
+			// validate the types of all values
+			for (let val of v) {
+				if (typeof val != "string") {
+					failedTypeAssertion(val,"string");
+				}
 			}
-			return v[0];
+
+			return any(strs,...v);
 		}
 	}
 
 	function bool(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			if (v === "true") v = true;
 			else if (v === "false") v = false;
@@ -77,7 +80,7 @@
 	}
 
 	function number(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			if (v === "NaN") v = NaN;
 			else {
@@ -94,7 +97,7 @@
 	}
 
 	function finite(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = strToNum(v);
 			if (Number.isFinite(t)) {
@@ -108,7 +111,7 @@
 	}
 
 	function int(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = strToNum(v);
 			if (Number.isInteger(t)) {
@@ -122,7 +125,7 @@
 	}
 
 	function bint(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			v = safeEval(v);
 		}
@@ -133,7 +136,7 @@
 	}
 
 	function symb(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = safeEval(v);
 			if (typeof t == "symbol") {
@@ -147,7 +150,7 @@
 	}
 
 	function array(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = safeEval(v);
 			if (Array.isArray(t)) {
@@ -161,7 +164,7 @@
 	}
 
 	function object(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = safeEval(v);
 			if (t && typeof t == "object") {
@@ -175,7 +178,7 @@
 	}
 
 	function func(...v) {
-		v = getVal(v);
+		v = parseSingleInput(v);
 		if (typeof v == "string") {
 			let t = safeEval(v);
 			if (t && typeof t == "function") {
@@ -188,14 +191,46 @@
 		return v;
 	}
 
+	function regex(strs,...v) {
+		// single value (no literals)?
+		if (
+			strs.length == 2 &&
+			strs[0].length == 0 &&
+			strs[1].length == 0
+		) {
+			return validate(v[0]);
+		}
+		else {
+			let t = safeEval(any(strs,...v).trim());
+			return validate(t);
+		}
+
+
+		// ***********************
+
+		function validate(val) {
+			if (val && typeof val == "object" && val instanceof RegExp) {
+				return val;
+			}
+			else {
+				failedTypeAssertion(val,"regular expression");
+			}
+		}
+	}
+
 
 	// ***********************************
 
-	function isNonTrivialStr(s) {
-		return s != "" && /[^\s]/.test(s);
+	function prepareStr(s) {
+		return s.trim().replace(/[\n]/g,"\\n").replace(/[\r]/g,"\\r");
 	}
 
-	function checkValidity([strs,...v]) {
+	function isNonTrivialStr(s) {
+		return /[^\s]/.test(s);
+	}
+
+	function parseSingleInput([strs,...v]) {
+		// first validate inputs
 		if (
 			strs.length > 2 ||
 			(
@@ -206,22 +241,26 @@
 				)
 			)
 		) {
-			try {
-				v = String(v[0]);
-			}
-			catch (e) {
-				v = " ";
-			}
+			// stringify all (invalid) inputs for exception message
+			v = v.map(function stringify(val){
+				// stringifying some values can throw
+				try {
+					return String(val);
+				}
+				catch (e) {
+					return "\ufffd";
+				}
+			});
 
-			throw new Error(`Invalid: ${strs.slice(0,2).join(v)}${strs.length > 2 ? "..." : ""}`);
+			v = prepareStr(String(any(strs,...v)));
+			throw new Error(`Invalid input: ${v}`);
 		}
-	}
 
-	function getVal([strs,...v]) {
-		checkValidity([strs,...v]);
+		// single literal?
 		if (strs.length == 1) {
 			return strs[0].trim();
 		}
+		// else single value
 		else {
 			return v[0];
 		}
@@ -241,14 +280,19 @@
 
 	function failedTypeAssertion(v,expectedType) {
 		var t;
+		// stringifying some values can throw
 		try {
 			t = String(v);
+			if (typeof v == "string") {
+				t = `'${t}'`;
+			}
 		}
 		catch (e) {
-			t = "*";
+			t = "\ufffd";
 		}
 
-		throw new Error(`${typeof v == "string" ? `'${t}'` : t} is not ${expectedType}`);
+		t = prepareStr(t);
+		throw new Error(`${t} is not type: ${expectedType}`);
 	}
 
 });
