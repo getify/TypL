@@ -1,6 +1,6 @@
 "use strict";
 
-QUnit.test( "API", function test(assert){
+QUnit.test( "Runtime: API", function test(assert){
 	assert.expect( 14 );
 
 	assert.ok( _isFunction( any ), "any(..)" );
@@ -19,7 +19,7 @@ QUnit.test( "API", function test(assert){
 	assert.ok( _isFunction( regex ), "regex(..)" );
 } );
 
-QUnit.test( "any(..)", function test(assert){
+QUnit.test( "Runtime: any(..)", function test(assert){
 	var rExpected = "hello world";
 	var pExpected = 42;
 	var qExpected = " hello 42 \ntrue! ";
@@ -37,7 +37,7 @@ QUnit.test( "any(..)", function test(assert){
 	assert.strictEqual( tActual, tExpected, "empty string" );
 } );
 
-QUnit.test( "undef(..)", function test(assert){
+QUnit.test( "Runtime: undef(..)", function test(assert){
 	var rExpected = undefined;
 	var pExpected = undefined;
 	var qExpected = undefined;
@@ -100,7 +100,7 @@ QUnit.test( "undef(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: null value" );
 } );
 
-QUnit.test( "nul(..)", function test(assert){
+QUnit.test( "Runtime: nul(..)", function test(assert){
 	var rExpected = null;
 	var pExpected = null;
 	var qExpected = null;
@@ -172,7 +172,7 @@ QUnit.test( "nul(..)", function test(assert){
 	assert.strictEqual( yActual, yExpected, "failed: non-string-coercible" );
 } );
 
-QUnit.test( "string(..)", function test(assert){
+QUnit.test( "Runtime: string(..)", function test(assert){
 	var rExpected = "hello";
 	var pExpected = "hello";
 	var qExpected = " \n hello \t ";
@@ -220,7 +220,7 @@ QUnit.test( "string(..)", function test(assert){
 	assert.strictEqual( wActual, wExpected, "failed: multiple values" );
 } );
 
-QUnit.test( "bool(..)", function test(assert){
+QUnit.test( "Runtime: bool(..)", function test(assert){
 	var rExpected = false;
 	var pExpected = false;
 	var qExpected = true;
@@ -283,7 +283,7 @@ QUnit.test( "bool(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
-QUnit.test( "number(..)", function test(assert){
+QUnit.test( "Runtime: number(..)", function test(assert){
 	var rExpected = 42;
 	var pExpected = 42;
 	var qExpected = NaN;
@@ -355,7 +355,7 @@ QUnit.test( "number(..)", function test(assert){
 	assert.strictEqual( yActual, yExpected, "failed: string value" );
 } );
 
-QUnit.test( "finite(..)", function test(assert){
+QUnit.test( "Runtime: finite(..)", function test(assert){
 	var rExpected = 1E308;
 	var pExpected = 1E308;
 	var qExpected = 42;
@@ -436,7 +436,7 @@ QUnit.test( "finite(..)", function test(assert){
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
 
-QUnit.test( "int(..)", function test(assert){
+QUnit.test( "Runtime: int(..)", function test(assert){
 	var rExpected = 42;
 	var pExpected = 42;
 	var qExpected = 42;
@@ -517,7 +517,7 @@ QUnit.test( "int(..)", function test(assert){
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
 
-QUnit.test( "bint(..)", function test(assert){
+QUnit.test( "Runtime: bint(..)", function test(assert){
 	if (typeof BigInt == "undefined") {
 		assert.expect(0);
 		return;
@@ -603,7 +603,7 @@ QUnit.test( "bint(..)", function test(assert){
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
 
-QUnit.test( "symb(..)", function test(assert){
+QUnit.test( "Runtime: symb(..)", function test(assert){
 	var rExpected = "Symbol(abc)";
 	var pExpected = "Symbol(abc)";
 	var qExpected = "Symbol(abc)";
@@ -666,7 +666,7 @@ QUnit.test( "symb(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
-QUnit.test( "array(..)", function test(assert){
+QUnit.test( "Runtime: array(..)", function test(assert){
 	var rExpected = [1,2,3];
 	var pExpected = [1,2,3];
 	var qExpected = [1,2,3];
@@ -729,7 +729,7 @@ QUnit.test( "array(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
-QUnit.test( "object(..)", function test(assert){
+QUnit.test( "Runtime: object(..)", function test(assert){
 	var rExpected = {a:1,b:2,c:3,};
 	var pExpected = {a:1,b:2,c:3,};
 	var qExpected = {a:1,b:2,c:3,};
@@ -792,7 +792,7 @@ QUnit.test( "object(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
-QUnit.test( "func(..)", function test(assert){
+QUnit.test( "Runtime: func(..)", function test(assert){
 	function foo() { var x = 1; }
 
 	var rExpected = foo.toString();
@@ -857,7 +857,7 @@ QUnit.test( "func(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
-QUnit.test( "regex(..)", function test(assert){
+QUnit.test( "Runtime: regex(..)", function test(assert){
 	var rExpected = "/foo+bar?/gs";
 	var pExpected = "/foo+bar?/gs";
 	var qExpected = "/foo+bar?/gs";
@@ -903,6 +903,21 @@ QUnit.test( "regex(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "failed: number value" );
 	assert.strictEqual( vActual, vExpected, "failed: literals + regex" );
 	assert.strictEqual( wActual, wExpected, "failed: multiple values" );
+} );
+
+QUnit.test( "Checker: API", function test(assert){
+	assert.expect( 1 );
+
+	assert.ok( _isFunction( Checker.check ), "check(..)" );
+} );
+
+QUnit.test( "Checker: check(..)", function test(assert){
+	var rExpected = undefined;
+
+	var rActual = Checker.check();
+
+	assert.expect( 1 );
+	assert.strictEqual( rActual, rExpected, "check(..)" );
 } );
 
 

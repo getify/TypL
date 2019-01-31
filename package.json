@@ -1,9 +1,10 @@
 {
 	"name": "typval",
-	"version": "0.0.7",
+	"version": "0.1.0",
 	"description": "Optional type annotations for JS values",
-	"main": "./dist/typval.js",
+	"main": "./src/node-typval.js",
 	"scripts": {
+		"typval": "node bin/cli.js",
 		"test": "node scripts/node-tests.js",
 		"test:dist": "TEST_DIST=true npm test",
 		"test:package": "TEST_PACKAGE=true npm test",
@@ -15,6 +16,12 @@
 		"prepare": "npm run build",
 		"prepublish": "npm run build && npm run test:all",
 		"publish": "npm run coverage:report"
+	},
+	"dependencies": {
+		"@babel/helpers": "~7.3.1",
+		"@babel/traverse": "~7.2.3",
+		"babylon": "~6.18.0",
+		"minimist": "~1.2.0"
 	},
 	"devDependencies": {
 		"coveralls": "~3.0.2",
