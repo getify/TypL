@@ -8,7 +8,7 @@ var fs = require("fs"),
 	year = (new Date()).getFullYear(),
 
 	ROOT_DIR = path.join(__dirname,".."),
-	SRC_DIR = path.join(ROOT_DIR,"src"),
+	SRC_DIR = path.join(ROOT_DIR,"lib"),
 	DIST_DIR = path.join(ROOT_DIR,"dist"),
 
 	LIB_SRC = [
