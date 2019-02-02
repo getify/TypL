@@ -7,7 +7,7 @@ var path = require("path");
 /* istanbul ignore next */
 if (process.env.TEST_DIST) {
 	let runtime = require(path.join(__dirname,"..","dist","typval-runtime.js"));
-	let Checker = require(path.join(__dirname,"..","dist","typval-checker.js"));
+	let Checker = require(path.join(__dirname,"..","src","checker.js"));
 	Object.assign(global,runtime,{ Checker, });
 }
 /* istanbul ignore next */

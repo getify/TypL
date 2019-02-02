@@ -1,10 +1,9 @@
 {
 	"name": "typval",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Optional type annotations for JS values",
-	"main": "./src/node-typval.js",
+	"main": "./src/index.js",
 	"scripts": {
-		"typval": "node bin/cli.js",
 		"test": "node scripts/node-tests.js",
 		"test:dist": "TEST_DIST=true npm test",
 		"test:package": "TEST_PACKAGE=true npm test",

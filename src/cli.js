@@ -1,19 +1,23 @@
-#!/usr/bin/env node
-
 "use strict";
 
 var path = require("path");
 var fs = require("fs");
 
-var Checker = require(path.join(__dirname,"..","src","checker.js"));
+var TypVal = require(path.join(__dirname,".."));
 
 var args = require("minimist")(process.argv.slice(2),{
 	boolean: ["help",],
+	string: ["file"]
 });
 
 
 if (args.help) {
-	showHelp();
+	outputHelp();
+}
+else if (args.file) {
+	let contents = fs.readFileSync(path.resolve(args.file),"utf-8");
+	let ast = TypVal.Checker.check(contents);
+	console.log(ast);
 }
 else {
 	reportError("Incorrect usage.",/*showHelp=*/true);
@@ -35,8 +39,9 @@ function reportError(err,showHelp = false) {
 
 function outputHelp() {
 	console.log("TypVal Usage:");
-	console.log("  typval {OPTIONS}");
+	console.log("  typval --file={FILENAME}");
 	console.log("");
 	console.log("--help                                    show this help");
+	console.log("--file={FILENAME}                         check file");
 	console.log("");
 }

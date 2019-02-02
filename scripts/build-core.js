@@ -13,11 +13,9 @@ var fs = require("fs"),
 
 	LIB_SRC = [
 		path.join(SRC_DIR,"runtime.js"),
-		path.join(SRC_DIR,"checker.js"),
 	],
 	LIB_DIST = [
 		path.join(DIST_DIR,"typval-runtime.js"),
-		path.join(DIST_DIR,"typval-checker.js"),
 	]
 ;
 
