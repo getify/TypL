@@ -17,7 +17,6 @@
 		"publish": "npm run coverage:report"
 	},
 	"dependencies": {
-		"@babel/helpers": "~7.3.1",
 		"@babel/traverse": "~7.2.3",
 		"@babel/types": "~7.3.0",
 		"babylon": "~6.18.0",
