@@ -27,15 +27,15 @@
 		"qunit": "~2.9.1",
 		"terser": "~3.14.1"
 	},
-	"repository": "getify/typval",
+	"repository": "getify/TypVal",
 	"keywords": [
 		"types"
 	],
 	"bugs": {
-		"url": "https://github.com/getify/typval/issues",
+		"url": "https://github.com/getify/TypVal/issues",
 		"email": "getify@gmail.com"
 	},
-	"homepage": "https://github.com/getify/typval",
+	"homepage": "https://github.com/getify/TypVal",
 	"author": "Kyle Simpson <getify@gmail.com>",
 	"license": "MIT"
 }
