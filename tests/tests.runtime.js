@@ -23,7 +23,7 @@ QUnit.test( "Runtime: any(..)", function test(assert){
 	var rExpected = "hello world";
 	var pExpected = 42;
 	var qExpected = " hello 42 \ntrue! ";
-	var tExpected = "";
+	var tExpected = undefined;
 
 	var rActual = any`hello world`;
 	var pActual = any`${42}`;
@@ -34,7 +34,7 @@ QUnit.test( "Runtime: any(..)", function test(assert){
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "multiple strings/values" );
-	assert.strictEqual( tActual, tExpected, "empty string" );
+	assert.strictEqual( tActual, tExpected, "empty default" );
 } );
 
 QUnit.test( "Runtime: undef(..)", function test(assert){
@@ -42,121 +42,52 @@ QUnit.test( "Runtime: undef(..)", function test(assert){
 	var pExpected = undefined;
 	var qExpected = undefined;
 	var tExpected = undefined;
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
+	var sExpected = undefined;
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
 
 	var rActual = undef`undefined`;
 	var pActual = undef`${undefined}`;
 	var qActual = undef` \n undefined \t `;
 	var tActual = undef` \n ${undefined} \t `;
-	var sActual;
-	try {
-		sActual = undef` x ${undefined} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
+	var sActual = undef``;
 	var uActual;
 	try {
-		uActual = undef` x ${Object.create(null)} y `;
+		uActual = undef` x ${undefined} y `;
 	}
 	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
 	}
 	var vActual;
 	try {
-		vActual = undef`${undefined} ${undefined}`;
+		vActual = undef` x ${Object.create(null)} y `;
 	}
 	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = undef`not undefined`;
+		wActual = undef`${undefined} ${undefined}`;
 	}
 	catch (e) {
-		wActual = (/is not type: undefined/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = undef`${null}`;
+		xActual = undef`not undefined`;
 	}
 	catch (e) {
-		xActual = (/is not type: undefined/i.test(e) ? "failed 2" : e.toString());
-	}
-
-	assert.expect( 9 );
-	assert.strictEqual( rActual, rExpected, "literal" );
-	assert.strictEqual( pActual, pExpected, "value" );
-	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
-	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: null value" );
-} );
-
-QUnit.test( "Runtime: nul(..)", function test(assert){
-	var rExpected = null;
-	var pExpected = null;
-	var qExpected = null;
-	var tExpected = null;
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
-	var yExpected = "failed 3";
-
-	var rActual = nul`null`;
-	var pActual = nul`${null}`;
-	var qActual = nul` \n null \t `;
-	var tActual = nul` \n ${null} \t `;
-	var sActual;
-	try {
-		sActual = nul` x ${null} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
-	var uActual;
-	try {
-		uActual = nul` x ${Object.create(null)} y `;
-	}
-	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
-	}
-	var vActual;
-	try {
-		vActual = nul`${null} ${null}`;
-	}
-	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
-	}
-	var wActual;
-	try {
-		wActual = nul`not null`;
-	}
-	catch (e) {
-		wActual = (/is not type: null/i.test(e) ? "failed 1" : e.toString());
-	}
-	var xActual;
-	try {
-		xActual = nul`${undefined}`;
-	}
-	catch (e) {
-		xActual = (/is not type: null/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: undefined/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
-		yActual = nul`${Object.create(null)}`;
+		yActual = undef`${null}`;
 	}
 	catch (e) {
-		yActual = (/is not type: null/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: undefined/i.test(e) ? "failed 2" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -164,12 +95,87 @@ QUnit.test( "Runtime: nul(..)", function test(assert){
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: undefined value" );
-	assert.strictEqual( yActual, yExpected, "failed: non-string-coercible" );
+	assert.strictEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: null value" );
+} );
+
+QUnit.test( "Runtime: nul(..)", function test(assert){
+	var rExpected = null;
+	var pExpected = null;
+	var qExpected = null;
+	var tExpected = null;
+	var sExpected = null;
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
+	var zExpected = "failed 3";
+
+	var rActual = nul`null`;
+	var pActual = nul`${null}`;
+	var qActual = nul` \n null \t `;
+	var tActual = nul` \n ${null} \t `;
+	var sActual = nul``;
+	var uActual;
+	try {
+		uActual = nul` x ${null} y `;
+	}
+	catch (e) {
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
+	}
+	var vActual;
+	try {
+		vActual = nul` x ${Object.create(null)} y `;
+	}
+	catch (e) {
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+	}
+	var wActual;
+	try {
+		wActual = nul`${null} ${null}`;
+	}
+	catch (e) {
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+	}
+	var xActual;
+	try {
+		xActual = nul`not null`;
+	}
+	catch (e) {
+		xActual = (/is not type: null/i.test(e) ? "failed 1" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = nul`${undefined}`;
+	}
+	catch (e) {
+		yActual = (/is not type: null/i.test(e) ? "failed 2" : e.toString());
+	}
+	var zActual;
+	try {
+		zActual = nul`${Object.create(null)}`;
+	}
+	catch (e) {
+		zActual = (/is not type: null/i.test(e) ? "failed 3" : e.toString());
+	}
+
+	assert.expect( 11 );
+	assert.strictEqual( rActual, rExpected, "literal" );
+	assert.strictEqual( pActual, pExpected, "value" );
+	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
+	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
+	assert.strictEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: undefined value" );
+	assert.strictEqual( zActual, zExpected, "failed: non-string-coercible" );
 } );
 
 QUnit.test( "Runtime: string(..)", function test(assert){
@@ -230,6 +236,7 @@ QUnit.test( "Runtime: bool(..)", function test(assert){
 	var vExpected = "invalid 3";
 	var wExpected = "failed 1";
 	var xExpected = "failed 2";
+	var yExpected = "failed 3";
 
 	var rActual = bool`false`;
 	var pActual = bool`${false}`;
@@ -270,8 +277,15 @@ QUnit.test( "Runtime: bool(..)", function test(assert){
 	catch (e) {
 		xActual = (/is not type: boolean/i.test(e) ? "failed 2" : e.toString());
 	}
+	var yActual;
+	try {
+		yActual = bool``;
+	}
+	catch (e) {
+		yActual = (/no default for type: boolean/i.test(e) ? "failed 3" : e.toString());
+	}
 
-	assert.expect( 9 );
+	assert.expect( 10 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
@@ -281,6 +295,7 @@ QUnit.test( "Runtime: bool(..)", function test(assert){
 	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.strictEqual( yActual, yExpected, "failed: no empty default" );
 } );
 
 QUnit.test( "Runtime: number(..)", function test(assert){
@@ -332,7 +347,7 @@ QUnit.test( "Runtime: number(..)", function test(assert){
 		xActual = number``;
 	}
 	catch (e) {
-		xActual = (/is not type: number/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/no default for type: number/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
@@ -351,7 +366,7 @@ QUnit.test( "Runtime: number(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
+	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: string value" );
 } );
 
@@ -405,7 +420,7 @@ QUnit.test( "Runtime: finite(..)", function test(assert){
 		xActual = finite``;
 	}
 	catch (e) {
-		xActual = (/is not type: finite/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/no default for type: finite number/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
@@ -431,7 +446,7 @@ QUnit.test( "Runtime: finite(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
+	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: Infinity" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
@@ -479,28 +494,28 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 		wActual = int`PI`;
 	}
 	catch (e) {
-		wActual = (/is not type: int/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: integer/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
 		xActual = int``;
 	}
 	catch (e) {
-		xActual = (/is not type: int/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/no default for type: integer/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = int`${3.14}`;
 	}
 	catch (e) {
-		yActual = (/is not type: int/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: integer/i.test(e) ? "failed 3" : e.toString());
 	}
 	var zActual;
 	try {
 		zActual = int`${"hello"}`;
 	}
 	catch (e) {
-		zActual = (/is not type: int/i.test(e) ? "failed 4" : e.toString());
+		zActual = (/is not type: integer/i.test(e) ? "failed 4" : e.toString());
 	}
 
 	assert.expect( 11 );
@@ -512,7 +527,7 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
+	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: floating point" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
@@ -572,7 +587,7 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 		xActual = bint``;
 	}
 	catch (e) {
-		xActual = (/is not type: bigint/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/no default for type: bigint/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
@@ -598,7 +613,7 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
 	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: empty literal (not zero)" );
+	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: floating point" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
 } );
@@ -608,62 +623,65 @@ QUnit.test( "Runtime: symb(..)", function test(assert){
 	var pExpected = "Symbol(abc)";
 	var qExpected = "Symbol(abc)";
 	var tExpected = "Symbol(abc)";
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
+	var sExpected = "Symbol()";
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
 
 	var rActual = String( symb`Symbol('abc')` );
 	var pActual = String( symb`${Symbol('abc')}` );
 	var qActual = String( symb` \n Symbol('abc') \t ` );
 	var tActual = String( symb` \n ${Symbol('abc')} \t ` );
-	var sActual;
-	try {
-		sActual = symb` x ${Symbol('abc')} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
+	var sActual = String( symb`` );
 	var uActual;
 	try {
-		uActual = symb` x ${Object.create(null)} y `;
+		uActual = symb` x ${Symbol('abc')} y `;
 	}
 	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
 	}
 	var vActual;
 	try {
-		vActual = symb`${"abc"} ${"abc"}`;
+		vActual = symb` x ${Object.create(null)} y `;
 	}
 	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = symb`symbol-abc`;
+		wActual = symb`${"abc"} ${"abc"}`;
 	}
 	catch (e) {
-		wActual = (/is not type: symbol/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = symb`${1}`;
+		xActual = symb`symbol-abc`;
 	}
 	catch (e) {
-		xActual = (/is not type: symbol/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: symbol/i.test(e) ? "failed 1" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = symb`${1}`;
+	}
+	catch (e) {
+		yActual = (/is not type: symbol/i.test(e) ? "failed 2" : e.toString());
 	}
 
-	assert.expect( 9 );
+	assert.expect( 10 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.strictEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: number value" );
 } );
 
 QUnit.test( "Runtime: array(..)", function test(assert){
@@ -671,62 +689,65 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	var pExpected = [1,2,3];
 	var qExpected = [1,2,3];
 	var tExpected = [1,2,3];
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
+	var sExpected = [];
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
 
 	var rActual = array`[1,2,3]`;
 	var pActual = array`${[1,2,3]}`;
 	var qActual = array` \n [1,2,3] \t `;
 	var tActual = array` \n ${[1,2,3]} \t `;
-	var sActual;
-	try {
-		sActual = array` x ${[1,2,3]} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
+	var sActual = array``;
 	var uActual;
 	try {
-		uActual = array` x ${Object.create(null)} y `;
+		uActual = array` x ${[1,2,3]} y `;
 	}
 	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
 	}
 	var vActual;
 	try {
-		vActual = array`${[1,2,3]} ${[1,2,3]}`;
+		vActual = array` x ${Object.create(null)} y `;
 	}
 	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = array`arrs`;
+		wActual = array`${[1,2,3]} ${[1,2,3]}`;
 	}
 	catch (e) {
-		wActual = (/is not type: array/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = array`${1}`;
+		xActual = array`arrs`;
 	}
 	catch (e) {
-		xActual = (/is not type: array/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: array/i.test(e) ? "failed 1" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = array`${1}`;
+	}
+	catch (e) {
+		yActual = (/is not type: array/i.test(e) ? "failed 2" : e.toString());
 	}
 
-	assert.expect( 9 );
+	assert.expect( 10 );
 	assert.deepEqual( rActual, rExpected, "literal" );
 	assert.deepEqual( pActual, pExpected, "value" );
 	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.deepEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.deepEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: number value" );
 } );
 
 QUnit.test( "Runtime: object(..)", function test(assert){
@@ -734,62 +755,65 @@ QUnit.test( "Runtime: object(..)", function test(assert){
 	var pExpected = {a:1,b:2,c:3,};
 	var qExpected = {a:1,b:2,c:3,};
 	var tExpected = {a:1,b:2,c:3,};
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
+	var sExpected = {};
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
 
 	var rActual = object`{a:1,b:2,c:3,}`;
 	var pActual = object`${{a:1,b:2,c:3,}}`;
 	var qActual = object` \n {a:1,b:2,c:3,} \t `;
 	var tActual = object` \n ${{a:1,b:2,c:3,}} \t `;
-	var sActual;
-	try {
-		sActual = object` x ${{a:1,b:2,c:3,}} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
+	var sActual = object``;
 	var uActual;
 	try {
-		uActual = object` x ${Object.create(null)} y `;
+		uActual = object` x ${{a:1,b:2,c:3,}} y `;
 	}
 	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
 	}
 	var vActual;
 	try {
-		vActual = object`${{}} ${{}}`;
+		vActual = object` x ${Object.create(null)} y `;
 	}
 	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = object`objs`;
+		wActual = object`${{}} ${{}}`;
 	}
 	catch (e) {
-		wActual = (/is not type: object/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = object`${1}`;
+		xActual = object`objs`;
 	}
 	catch (e) {
-		xActual = (/is not type: object/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: object/i.test(e) ? "failed 1" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = object`${1}`;
+	}
+	catch (e) {
+		yActual = (/is not type: object/i.test(e) ? "failed 2" : e.toString());
 	}
 
-	assert.expect( 9 );
+	assert.expect( 10 );
 	assert.deepEqual( rActual, rExpected, "literal" );
 	assert.deepEqual( pActual, pExpected, "value" );
 	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.deepEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.deepEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: number value" );
 } );
 
 QUnit.test( "Runtime: func(..)", function test(assert){
@@ -799,62 +823,65 @@ QUnit.test( "Runtime: func(..)", function test(assert){
 	var pExpected = foo.toString();
 	var qExpected = foo.toString();
 	var tExpected = foo.toString();
-	var sExpected = "invalid 1";
-	var uExpected = "invalid 2";
-	var vExpected = "invalid 3";
-	var wExpected = "failed 1";
-	var xExpected = "failed 2";
+	var sExpected = (()=>void 0).toString();
+	var uExpected = "invalid 1";
+	var vExpected = "invalid 2";
+	var wExpected = "invalid 3";
+	var xExpected = "failed 1";
+	var yExpected = "failed 2";
 
 	var rActual = String( func`function foo() { var x = 1; }` );
 	var pActual = String( func`${foo}` );
 	var qActual = String( func` \n function foo() { var x = 1; } \t ` );
 	var tActual = String( func` \n ${foo} \t ` );
-	var sActual;
-	try {
-		sActual = func` x ${foo} y `;
-	}
-	catch (e) {
-		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
-	}
+	var sActual = String( func`` );
 	var uActual;
 	try {
-		uActual = func` x ${Object.create(null)} y `;
+		uActual = func` x ${foo} y `;
 	}
 	catch (e) {
-		uActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
+		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
 	}
 	var vActual;
 	try {
-		vActual = func`${foo} ${foo}`;
+		vActual = func` x ${Object.create(null)} y `;
 	}
 	catch (e) {
-		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
+		vActual = (/invalid/i.test(e) ? "invalid 2" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = func`funfunfun`;
+		wActual = func`${foo} ${foo}`;
 	}
 	catch (e) {
-		wActual = (/is not type: function/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = func`${1}`;
+		xActual = func`funfunfun`;
 	}
 	catch (e) {
-		xActual = (/is not type: function/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: function/i.test(e) ? "failed 1" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = func`${1}`;
+	}
+	catch (e) {
+		yActual = (/is not type: function/i.test(e) ? "failed 2" : e.toString());
 	}
 
-	assert.expect( 9 );
+	assert.expect( 10 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
-	assert.strictEqual( sActual, sExpected, "invalid: literals" );
-	assert.strictEqual( uActual, uExpected, "invalid: non-string-coercible" );
-	assert.strictEqual( vActual, vExpected, "invalid: multiple values" );
-	assert.strictEqual( wActual, wExpected, "failed: literal" );
-	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.strictEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "invalid: literals" );
+	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
+	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
+	assert.strictEqual( xActual, xExpected, "failed: literal" );
+	assert.strictEqual( yActual, yExpected, "failed: number value" );
 } );
 
 QUnit.test( "Runtime: regex(..)", function test(assert){
@@ -863,46 +890,49 @@ QUnit.test( "Runtime: regex(..)", function test(assert){
 	var qExpected = "/foo+bar?/gs";
 	var tExpected = "/foo+bar?/gs";
 	var sExpected = "/foo+42bar?10/gs";
-	var uExpected = "failed 1";
-	var vExpected = "failed 2";
-	var wExpected = "failed 3";
+	var uExpected = "/(?:)/";
+	var vExpected = "failed 1";
+	var wExpected = "failed 2";
+	var xExpected = "failed 3";
 
 	var rActual = String( regex`/foo+bar?/gs` );
 	var pActual = String( regex`${/foo+bar?/gs}` );
 	var qActual = String( regex` \n /foo+bar?/gs \t ` );
 	var tActual = String( regex` \n ${/foo+bar?/gs} \t ` );
 	var sActual = String( regex`/foo+${42}bar?${10}/gs` );
-	var uActual;
-	try {
-		uActual = regex`${42}`;
-	}
-	catch (e) {
-		uActual = (/is not type: regular expression/i.test(e) ? "failed 1" : e.toString());
-	}
+	var uActual = String( regex`` );
 	var vActual;
 	try {
-		vActual = regex`x ${/foo/} y`;
+		vActual = regex`${42}`;
 	}
 	catch (e) {
-		vActual = (/is not type: regular expression/i.test(e) ? "failed 2" : e.toString());
+		vActual = (/is not type: regular expression/i.test(e) ? "failed 1" : e.toString());
 	}
 	var wActual;
 	try {
-		wActual = regex`${/foo/} ${/bar/} ${42}`;
+		wActual = regex`x ${/foo/} y`;
 	}
 	catch (e) {
-		wActual = (/is not type: regular expression/i.test(e) ? "failed 3" : e.toString());
+		wActual = (/is not type: regular expression/i.test(e) ? "failed 2" : e.toString());
+	}
+	var xActual;
+	try {
+		xActual = regex`${/foo/} ${/bar/} ${42}`;
+	}
+	catch (e) {
+		xActual = (/is not type: regular expression/i.test(e) ? "failed 3" : e.toString());
 	}
 
-	assert.expect( 8 );
+	assert.expect( 9 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
 	assert.strictEqual( tActual, tExpected, "extra whitespace: value" );
 	assert.strictEqual( sActual, sExpected, "multiple values" );
-	assert.strictEqual( uActual, uExpected, "failed: number value" );
-	assert.strictEqual( vActual, vExpected, "failed: literals + regex" );
-	assert.strictEqual( wActual, wExpected, "failed: multiple values" );
+	assert.strictEqual( uActual, uExpected, "empty default" );
+	assert.strictEqual( vActual, vExpected, "failed: number value" );
+	assert.strictEqual( wActual, wExpected, "failed: literals + regex" );
+	assert.strictEqual( xActual, xExpected, "failed: multiple values" );
 } );
 
 
