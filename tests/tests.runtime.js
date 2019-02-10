@@ -463,6 +463,8 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 	var xExpected = "failed 2";
 	var yExpected = "failed 3";
 	var zExpected = "failed 4";
+	var aExpected = "failed 5";
+	var bExpected = "failed 6";
 
 	var rActual = int`42`;
 	var pActual = int`${42}`;
@@ -517,8 +519,22 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 	catch (e) {
 		zActual = (/is not type: integer/i.test(e) ? "failed 4" : e.toString());
 	}
+	var aActual;
+	try {
+		aActual = int`-0`;
+	}
+	catch (e) {
+		aActual = (/is not type: integer/i.test(e) ? "failed 5" : e.toString());
+	}
+	var bActual;
+	try {
+		bActual = int`${-0}`;
+	}
+	catch (e) {
+		bActual = (/is not type: integer/i.test(e) ? "failed 6" : e.toString());
+	}
 
-	assert.expect( 11 );
+	assert.expect( 13 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
@@ -530,6 +546,8 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: floating point" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
+	assert.strictEqual( aActual, aExpected, "failed: -0 literal" );
+	assert.strictEqual( bActual, bExpected, "failed: -0 value" );
 } );
 
 QUnit.test( "Runtime: bint(..)", function test(assert){
@@ -549,6 +567,8 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	var xExpected = "failed 2";
 	var yExpected = "failed 3";
 	var zExpected = "failed 4";
+	var aExpected = "failed 5";
+	var bExpected = "failed 6";
 
 	var rActual = bint`42n`;
 	var pActual = bint`${42n}`;
@@ -603,8 +623,22 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	catch (e) {
 		zActual = (/is not type: bigint/i.test(e) ? "failed 4" : e.toString());
 	}
+	var aActual;
+	try {
+		aActual = bint`-0`;
+	}
+	catch (e) {
+		aActual = (/is not type: bigint/i.test(e) ? "failed 5" : e.toString());
+	}
+	var bActual;
+	try {
+		bActual = bint`${-0}`;
+	}
+	catch (e) {
+		bActual = (/is not type: bigint/i.test(e) ? "failed 6" : e.toString());
+	}
 
-	assert.expect( 11 );
+	assert.expect( 13 );
 	assert.strictEqual( rActual, rExpected, "literal" );
 	assert.strictEqual( pActual, pExpected, "value" );
 	assert.strictEqual( qActual, qExpected, "extra whitespace: literal" );
@@ -616,6 +650,8 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	assert.strictEqual( xActual, xExpected, "failed: no empty default" );
 	assert.strictEqual( yActual, yExpected, "failed: floating point" );
 	assert.strictEqual( zActual, zExpected, "failed: string value" );
+	assert.strictEqual( aActual, aExpected, "failed: -0 literal" );
+	assert.strictEqual( bActual, bExpected, "failed: -0 value" );
 } );
 
 QUnit.test( "Runtime: symb(..)", function test(assert){
