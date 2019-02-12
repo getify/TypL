@@ -43,6 +43,12 @@ copyrightHeader = Function("version","year",`return \`${copyrightHeader}\`;`)( v
 
 // ***************************
 
+// try to make the dist directory, if needed
+try {
+	fs.mkdirSync(DIST_DIR,0o755);
+}
+catch (err) { }
+
 for (let [idx,SRC] of LIB_SRC.entries()) {
 	let DIST = LIB_DIST[idx];
 
