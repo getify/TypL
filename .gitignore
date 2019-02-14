@@ -3,4 +3,4 @@
 node_modules/
 dist/
 coverage/
-test-snippets
+test-snippets/
