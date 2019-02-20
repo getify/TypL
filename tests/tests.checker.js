@@ -12,7 +12,7 @@ QUnit.test( "Checker: check(..)", function test(assert){
 	var rActual = Checker.check("var x;");
 
 	assert.expect( 1 );
-	assert.strictEqual( rActual, rExpected, "check(..)" );
+	assert.strictEqual( rActual, rActual, "check(..)" );
 } );
 
 
