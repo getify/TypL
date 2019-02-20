@@ -1,0 +1,7 @@
+.npmignore
+.gitignore
+.coveralls.yml
+.history
+node_modules/
+coverage/
+test-snippets/
