@@ -1,7 +1,7 @@
 {
-	"name": "typval",
-	"version": "0.2.0",
-	"description": "Optional type annotations for JS values",
+	"name": "typl",
+	"version": "0.3.0",
+	"description": "Optional type annotations and type-check linting",
 	"main": "./lib/index.js",
 	"scripts": {
 		"test": "node scripts/node-tests.js",
@@ -27,15 +27,15 @@
 		"qunit": "~2.9.1",
 		"terser": "~3.14.1"
 	},
-	"repository": "getify/TypVal",
+	"repository": "getify/Typl",
 	"keywords": [
 		"types"
 	],
 	"bugs": {
-		"url": "https://github.com/getify/TypVal/issues",
+		"url": "https://github.com/getify/Typl/issues",
 		"email": "getify@gmail.com"
 	},
-	"homepage": "https://github.com/getify/TypVal",
+	"homepage": "https://github.com/getify/Typl",
 	"author": "Kyle Simpson <getify@gmail.com>",
 	"license": "MIT"
 }
