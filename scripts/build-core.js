@@ -15,14 +15,14 @@ var fs = require("fs"),
 		path.join(SRC_DIR,"runtime.js"),
 	],
 	LIB_DIST = [
-		path.join(DIST_DIR,"typval-runtime.js"),
+		path.join(DIST_DIR,"typl-runtime.js"),
 	]
 ;
 
 
 // ***************************
 
-console.log("*** Building TypVal ***");
+console.log("*** Building Typl ***");
 
 // read version number from package.json
 var packageJSON = JSON.parse(

@@ -13,11 +13,11 @@ function begin(details){
 	printEnvNotification();
 
 	if (details.totalTests > 0) {
-		console.log(`TNG-Hooks Test Suite (${details.totalTests})`);
+		console.log(`Typl Test Suite (${details.totalTests})`);
 		console.log("");
 	}
 	else {
-		console.log(`TNG-Hooks Test Suite: empty!`);
+		console.log(`Typl Test Suite: empty!`);
 		process.exit(1);
 	}
 }
