@@ -1,4 +1,5 @@
 "use strict";
+
 var path = require("path");
 var Typl = require(path.join(__dirname,"..","lib"));
 
