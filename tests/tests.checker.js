@@ -9,20 +9,22 @@ QUnit.test( "Checker: API", function test(assert){
 
 QUnit.test( "Checker: #6 number sub-types", function test(assert){
 	assert.expect(2);
-	let code  = `var a = int\`3\`;
-	a = 4;														// error, can't assign number to int
-	
-	var b = 5;
-	b = int\`6\`;											// no error
-	
-	var c = finite\`7\`;
-	b = c;														// no error
-	c = b;														// error can't assign number to finite`
+	let code  = `
+		var a = int\`3\`;
+		a = number\`4\`;		// error: can't assign number to int
 
-	let {outputMessages} = Typl.Checker.  check(code, {verbose:false});
-	let errors = outputMessages.filter(m => m.type == "error")
-	assert.equal(outputMessages.length, 5, 'total output length');
-	assert.equal(errors.length, 2, 'num errors');
+		var b = 5;
+		b = int\`6\`;			// no error (int can be assigned to number)
+
+		var c = finite\`7\`;
+		b = c;					// no error (finite can be assigned to number)
+		c = b;					// error: can't assign number to finite
+	`;
+
+	let { outputMessages, } = Typl.Checker.check(code,{ verbose: false, });
+	let errors = outputMessages.filter(function isError(msg){ return msg.type == "error"; });
+	assert.equal(outputMessages.length,6,"total output length");
+	assert.equal(errors.length,2,"num errors");
 } );
 
 QUnit.test( "Checker: #7 enforce bool type check in conditionals", function test(assert){
@@ -31,16 +33,16 @@ QUnit.test( "Checker: #7 enforce bool type check in conditionals", function test
 	function foo(){
 		return "ddd";										// foo returns string
 	}
-	
+
 	function bar(){
 		return "d" + 3 > 9;
 	}
-	
+
 	if(i){}														// pass
 	while(i){}												// pass
 	do{} while(i)											// pass
 	let a = i ? 1 : 0;								// pass
-	
+
 	if(foo()){}												// error
 	while(foo()){}										// error
 	do{} while(foo())									// error
@@ -69,16 +71,16 @@ QUnit.test( "Checker: #9 undef", function test(assert){
 	assert.expect(2);
 	let code  = `var a;
 	var b = a + 1;										// error: mixed operand types
-	
+
 	a = 2;														// no error, overwrites a to type number
 	b = a + 2;												// no error
-	
+
 	var c = undefined;
 	c = 3;														// no error, overwrites c to type number
-	
+
 	var d = undef\`\`;
 	d = 4;														// error, d is already tagged-type of undef`
-	
+
 	let {outputMessages} = Typl.Checker.check(code, {verbose:false});
 	let errors = outputMessages.filter(m => m.type == "error")
 	assert.equal(outputMessages.length, 24, 'total output length');
@@ -91,11 +93,11 @@ QUnit.test( "Checker: #17 Narrower number type inference", function test(assert)
 	let code  = `var x = 3;						// infer 'int'
 	var y = 3.14;											// infer 'finite'
 	var z = NaN;											// infer 'number'
-	
+
 	x = 2.2														// error, expected int, got number
 	y = NaN														// error, expected finite, got number
 	z = "a"														// error, expected number, found string`
-	
+
 	let {outputMessages} = Typl.Checker.check(code, {verbose:false});
 	let errors = outputMessages.filter(m => m.type == "error")
 	assert.equal(outputMessages.length, 29, 'total output length');
@@ -107,7 +109,7 @@ QUnit.test( "Checker: #33 Treat IIFE as a validated call-expression", function t
 	let code  = `var y = (function foo(x = number){
 		return String(x);
 	})(true);`
-	
+
 	let {outputMessages} = Typl.Checker.check(code, {verbose:false});
 	let errors = outputMessages.filter(m => m.type == "error")
 	assert.equal(outputMessages.length, 32, 'total output length');
@@ -121,7 +123,7 @@ QUnit.test( "Checker: #34 check tagged-type simple literals", function test(asse
 	bool\`${true}\`											// OK
 	bool\`true\`												// OK
 	bool\`ok\`													// error`
-	
+
 	let {outputMessages} = Typl.Checker.check(code, {verbose:false});
 	let errors = outputMessages.filter(m => m.type == "error")
 	assert.equal(outputMessages.length, 34, 'total output length');
