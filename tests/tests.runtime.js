@@ -556,10 +556,10 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 		return;
 	}
 
-	var rExpected = 42n;
-	var pExpected = 42n;
-	var qExpected = 42n;
-	var tExpected = 42n;
+	var rExpected = BigInt("42");
+	var pExpected = BigInt("42");
+	var qExpected = BigInt("42");
+	var tExpected = BigInt("42");
 	var sExpected = "invalid 1";
 	var uExpected = "invalid 2";
 	var vExpected = "invalid 3";
@@ -571,12 +571,12 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	var bExpected = "failed 6";
 
 	var rActual = bint`42n`;
-	var pActual = bint`${42n}`;
+	var pActual = bint`${BigInt("42")}`;
 	var qActual = bint` \n 42n \t `;
-	var tActual = bint` \n ${42n} \t `;
+	var tActual = bint` \n ${BigInt("42")} \t `;
 	var sActual;
 	try {
-		sActual = bint` x ${42n} y `;
+		sActual = bint` x ${BigInt("42")} y `;
 	}
 	catch (e) {
 		sActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
@@ -590,7 +590,7 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 	}
 	var vActual;
 	try {
-		vActual = bint`${42n} ${42n}`;
+		vActual = bint`${BigInt("42")} ${BigInt("42")}`;
 	}
 	catch (e) {
 		vActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
@@ -667,13 +667,13 @@ QUnit.test( "Runtime: symb(..)", function test(assert){
 	var yExpected = "failed 2";
 
 	var rActual = String( symb`Symbol('abc')` );
-	var pActual = String( symb`${Symbol('abc')}` );
-	var qActual = String( symb` \n Symbol('abc') \t ` );
-	var tActual = String( symb` \n ${Symbol('abc')} \t ` );
+	var pActual = String( symb`${Symbol("abc")}` );
+	var qActual = String( symb` \n Symbol("abc") \t ` );
+	var tActual = String( symb` \n ${Symbol("abc")} \t ` );
 	var sActual = String( symb`` );
 	var uActual;
 	try {
-		uActual = symb` x ${Symbol('abc')} y `;
+		uActual = symb` x ${Symbol("abc")} y `;
 	}
 	catch (e) {
 		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
@@ -721,25 +721,24 @@ QUnit.test( "Runtime: symb(..)", function test(assert){
 } );
 
 QUnit.test( "Runtime: array(..)", function test(assert){
-	var rExpected = [1,2,3];
-	var pExpected = [1,2,3];
-	var qExpected = [1,2,3];
-	var tExpected = [1,2,3];
+	var rExpected = [1,2,3,];
+	var pExpected = [1,2,3,];
+	var qExpected = [1,2,3,];
+	var tExpected = [1,2,3,];
 	var sExpected = [];
 	var uExpected = "invalid 1";
 	var vExpected = "invalid 2";
 	var wExpected = "invalid 3";
 	var xExpected = "failed 1";
-	var yExpected = "failed 2";
 
 	var rActual = array`[1,2,3]`;
-	var pActual = array`${[1,2,3]}`;
+	var pActual = array`${[1,2,3,]}`;
 	var qActual = array` \n [1,2,3] \t `;
-	var tActual = array` \n ${[1,2,3]} \t `;
+	var tActual = array` \n ${[1,2,3,]} \t `;
 	var sActual = array``;
 	var uActual;
 	try {
-		uActual = array` x ${[1,2,3]} y `;
+		uActual = array` x ${[1,2,3,]} y `;
 	}
 	catch (e) {
 		uActual = (/invalid/i.test(e) ? "invalid 1" : e.toString());
@@ -753,27 +752,20 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	}
 	var wActual;
 	try {
-		wActual = array`${[1,2,3]} ${[1,2,3]}`;
+		wActual = array`${[1,2,3,]} ${[1,2,3,]}`;
 	}
 	catch (e) {
 		wActual = (/invalid/i.test(e) ? "invalid 3" : e.toString());
 	}
 	var xActual;
 	try {
-		xActual = array`arrs`;
+		xActual = array`${1}`;
 	}
 	catch (e) {
 		xActual = (/is not type: array/i.test(e) ? "failed 1" : e.toString());
 	}
-	var yActual;
-	try {
-		yActual = array`${1}`;
-	}
-	catch (e) {
-		yActual = (/is not type: array/i.test(e) ? "failed 2" : e.toString());
-	}
 
-	assert.expect( 10 );
+	assert.expect( 9 );
 	assert.deepEqual( rActual, rExpected, "literal" );
 	assert.deepEqual( pActual, pExpected, "value" );
 	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
@@ -782,8 +774,7 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	assert.strictEqual( uActual, uExpected, "invalid: literals" );
 	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
-	assert.strictEqual( xActual, xExpected, "failed: literal" );
-	assert.strictEqual( yActual, yExpected, "failed: number value" );
+	assert.strictEqual( xActual, xExpected, "failed: number value" );
 } );
 
 QUnit.test( "Runtime: object(..)", function test(assert){
@@ -859,7 +850,7 @@ QUnit.test( "Runtime: func(..)", function test(assert){
 	var pExpected = foo.toString();
 	var qExpected = foo.toString();
 	var tExpected = foo.toString();
-	var sExpected = (()=>void 0).toString();
+	var sExpected = (()=>undefined).toString();
 	var uExpected = "invalid 1";
 	var vExpected = "invalid 2";
 	var wExpected = "invalid 3";
