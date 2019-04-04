@@ -80,14 +80,14 @@ QUnit.test( "Runtime: undef(..)", function test(assert){
 		xActual = undef`not undefined`;
 	}
 	catch (e) {
-		xActual = (/is not type: undefined/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'undefined'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = undef`${null}`;
 	}
 	catch (e) {
-		yActual = (/is not type: undefined/i.test(e) ? "failed 2" : e.toString());
+		yActual = (/is not type: 'undefined'/i.test(e) ? "failed 2" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -147,21 +147,21 @@ QUnit.test( "Runtime: nul(..)", function test(assert){
 		xActual = nul`not null`;
 	}
 	catch (e) {
-		xActual = (/is not type: null/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'null'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = nul`${undefined}`;
 	}
 	catch (e) {
-		yActual = (/is not type: null/i.test(e) ? "failed 2" : e.toString());
+		yActual = (/is not type: 'null'/i.test(e) ? "failed 2" : e.toString());
 	}
 	var zActual;
 	try {
 		zActual = nul`${Object.create(null)}`;
 	}
 	catch (e) {
-		zActual = (/is not type: null/i.test(e) ? "failed 3" : e.toString());
+		zActual = (/is not type: 'null'/i.test(e) ? "failed 3" : e.toString());
 	}
 
 	assert.expect( 11 );
@@ -198,21 +198,21 @@ QUnit.test( "Runtime: string(..)", function test(assert){
 		uActual = string`${42}`;
 	}
 	catch (e) {
-		uActual = (/is not type: string/i.test(e) ? "failed 1" : e.toString());
+		uActual = (/is not type: 'string'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var vActual;
 	try {
 		vActual = string`x ${42} y`;
 	}
 	catch (e) {
-		vActual = (/is not type: string/i.test(e) ? "failed 2" : e.toString());
+		vActual = (/is not type: 'string'/i.test(e) ? "failed 2" : e.toString());
 	}
 	var wActual;
 	try {
 		wActual = string`${"foo"} ${"bar"} ${42}`;
 	}
 	catch (e) {
-		wActual = (/is not type: string/i.test(e) ? "failed 3" : e.toString());
+		wActual = (/is not type: 'string'/i.test(e) ? "failed 3" : e.toString());
 	}
 
 	assert.expect( 8 );
@@ -268,14 +268,14 @@ QUnit.test( "Runtime: bool(..)", function test(assert){
 		wActual = bool`not false`;
 	}
 	catch (e) {
-		wActual = (/is not type: boolean/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: 'boolean'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
 		xActual = bool`${1}`;
 	}
 	catch (e) {
-		xActual = (/is not type: boolean/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/is not type: 'boolean'/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
@@ -340,7 +340,7 @@ QUnit.test( "Runtime: number(..)", function test(assert){
 		wActual = number`forty-two`;
 	}
 	catch (e) {
-		wActual = (/is not type: number/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: 'number'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
@@ -354,7 +354,7 @@ QUnit.test( "Runtime: number(..)", function test(assert){
 		yActual = number`${"hello"}`;
 	}
 	catch (e) {
-		yActual = (/is not type: number/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: 'number'/i.test(e) ? "failed 3" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -413,28 +413,28 @@ QUnit.test( "Runtime: finite(..)", function test(assert){
 		wActual = finite`infinitely`;
 	}
 	catch (e) {
-		wActual = (/is not type: finite/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: 'finite number'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
 		xActual = finite``;
 	}
 	catch (e) {
-		xActual = (/no default for type: finite number/i.test(e) ? "failed 2" : e.toString());
+		xActual = (/no default for type: 'finite number'/i.test(e) ? "failed 2" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = finite`${Infinity}`;
 	}
 	catch (e) {
-		yActual = (/is not type: finite/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: 'finite number'/i.test(e) ? "failed 3" : e.toString());
 	}
 	var zActual;
 	try {
 		zActual = finite`${"hello"}`;
 	}
 	catch (e) {
-		zActual = (/is not type: finite/i.test(e) ? "failed 4" : e.toString());
+		zActual = (/is not type: 'finite number'/i.test(e) ? "failed 4" : e.toString());
 	}
 
 	assert.expect( 11 );
@@ -496,7 +496,7 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 		wActual = int`PI`;
 	}
 	catch (e) {
-		wActual = (/is not type: integer/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: 'integer'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
@@ -510,28 +510,28 @@ QUnit.test( "Runtime: int(..)", function test(assert){
 		yActual = int`${3.14}`;
 	}
 	catch (e) {
-		yActual = (/is not type: integer/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: 'integer'/i.test(e) ? "failed 3" : e.toString());
 	}
 	var zActual;
 	try {
 		zActual = int`${"hello"}`;
 	}
 	catch (e) {
-		zActual = (/is not type: integer/i.test(e) ? "failed 4" : e.toString());
+		zActual = (/is not type: 'integer'/i.test(e) ? "failed 4" : e.toString());
 	}
 	var aActual;
 	try {
 		aActual = int`-0`;
 	}
 	catch (e) {
-		aActual = (/is not type: integer/i.test(e) ? "failed 5" : e.toString());
+		aActual = (/is not type: 'integer'/i.test(e) ? "failed 5" : e.toString());
 	}
 	var bActual;
 	try {
 		bActual = int`${-0}`;
 	}
 	catch (e) {
-		bActual = (/is not type: integer/i.test(e) ? "failed 6" : e.toString());
+		bActual = (/is not type: 'integer'/i.test(e) ? "failed 6" : e.toString());
 	}
 
 	assert.expect( 13 );
@@ -600,7 +600,7 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 		wActual = bint`42big`;
 	}
 	catch (e) {
-		wActual = (/is not type: bigint/i.test(e) ? "failed 1" : e.toString());
+		wActual = (/is not type: 'bigint'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var xActual;
 	try {
@@ -614,28 +614,28 @@ QUnit.test( "Runtime: bint(..)", function test(assert){
 		yActual = bint`${42}`;
 	}
 	catch (e) {
-		yActual = (/is not type: bigint/i.test(e) ? "failed 3" : e.toString());
+		yActual = (/is not type: 'bigint'/i.test(e) ? "failed 3" : e.toString());
 	}
 	var zActual;
 	try {
 		zActual = bint`${"hello"}`;
 	}
 	catch (e) {
-		zActual = (/is not type: bigint/i.test(e) ? "failed 4" : e.toString());
+		zActual = (/is not type: 'bigint'/i.test(e) ? "failed 4" : e.toString());
 	}
 	var aActual;
 	try {
 		aActual = bint`-0`;
 	}
 	catch (e) {
-		aActual = (/is not type: bigint/i.test(e) ? "failed 5" : e.toString());
+		aActual = (/is not type: 'bigint'/i.test(e) ? "failed 5" : e.toString());
 	}
 	var bActual;
 	try {
 		bActual = bint`${-0}`;
 	}
 	catch (e) {
-		bActual = (/is not type: bigint/i.test(e) ? "failed 6" : e.toString());
+		bActual = (/is not type: 'bigint'/i.test(e) ? "failed 6" : e.toString());
 	}
 
 	assert.expect( 13 );
@@ -697,14 +697,14 @@ QUnit.test( "Runtime: symb(..)", function test(assert){
 		xActual = symb`symbol-abc`;
 	}
 	catch (e) {
-		xActual = (/is not type: symbol/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'symbol'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = symb`${1}`;
 	}
 	catch (e) {
-		yActual = (/is not type: symbol/i.test(e) ? "failed 2" : e.toString());
+		yActual = (/is not type: 'symbol'/i.test(e) ? "failed 2" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -762,7 +762,7 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 		xActual = array`${1}`;
 	}
 	catch (e) {
-		xActual = (/is not type: array/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'array'/i.test(e) ? "failed 1" : e.toString());
 	}
 
 	assert.expect( 9 );
@@ -820,14 +820,14 @@ QUnit.test( "Runtime: object(..)", function test(assert){
 		xActual = object`objs`;
 	}
 	catch (e) {
-		xActual = (/is not type: object/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'object'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = object`${1}`;
 	}
 	catch (e) {
-		yActual = (/is not type: object/i.test(e) ? "failed 2" : e.toString());
+		yActual = (/is not type: 'object'/i.test(e) ? "failed 2" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -888,14 +888,14 @@ QUnit.test( "Runtime: func(..)", function test(assert){
 		xActual = func`funfunfun`;
 	}
 	catch (e) {
-		xActual = (/is not type: function/i.test(e) ? "failed 1" : e.toString());
+		xActual = (/is not type: 'function'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var yActual;
 	try {
 		yActual = func`${1}`;
 	}
 	catch (e) {
-		yActual = (/is not type: function/i.test(e) ? "failed 2" : e.toString());
+		yActual = (/is not type: 'function'/i.test(e) ? "failed 2" : e.toString());
 	}
 
 	assert.expect( 10 );
@@ -933,21 +933,21 @@ QUnit.test( "Runtime: regex(..)", function test(assert){
 		vActual = regex`${42}`;
 	}
 	catch (e) {
-		vActual = (/is not type: regular expression/i.test(e) ? "failed 1" : e.toString());
+		vActual = (/is not type: 'regular expression'/i.test(e) ? "failed 1" : e.toString());
 	}
 	var wActual;
 	try {
 		wActual = regex`x ${/foo/} y`;
 	}
 	catch (e) {
-		wActual = (/is not type: regular expression/i.test(e) ? "failed 2" : e.toString());
+		wActual = (/is not type: 'regular expression'/i.test(e) ? "failed 2" : e.toString());
 	}
 	var xActual;
 	try {
 		xActual = regex`${/foo/} ${/bar/} ${42}`;
 	}
 	catch (e) {
-		xActual = (/is not type: regular expression/i.test(e) ? "failed 3" : e.toString());
+		xActual = (/is not type: 'regular expression'/i.test(e) ? "failed 3" : e.toString());
 	}
 
 	assert.expect( 9 );
