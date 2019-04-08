@@ -730,6 +730,8 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	var vExpected = "invalid 2";
 	var wExpected = "invalid 3";
 	var xExpected = "failed 1";
+	var yExpected = "failed 2";
+	var zExpected = "failed 3";
 
 	var rActual = array`[1,2,3]`;
 	var pActual = array`${[1,2,3,]}`;
@@ -764,8 +766,22 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	catch (e) {
 		xActual = (/is not type: 'array'/i.test(e) ? "failed 1" : e.toString());
 	}
+	var yActual;
+	try {
+		yActual = array`${"[1,2,3]"}`;
+	}
+	catch (e) {
+		yActual = (/is not type: 'array'/i.test(e) ? "failed 2" : e.toString());
+	}
+	var zActual;
+	try {
+		zActual = array`[1,2,3,[]`;
+	}
+	catch (e) {
+		zActual = (/is not type: 'array'/i.test(e) ? "failed 3" : e.toString());
+	}
 
-	assert.expect( 9 );
+	assert.expect( 11 );
 	assert.deepEqual( rActual, rExpected, "literal" );
 	assert.deepEqual( pActual, pExpected, "value" );
 	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
@@ -775,6 +791,372 @@ QUnit.test( "Runtime: array(..)", function test(assert){
 	assert.strictEqual( vActual, vExpected, "invalid: non-string-coercible" );
 	assert.strictEqual( wActual, wExpected, "invalid: multiple values" );
 	assert.strictEqual( xActual, xExpected, "failed: number value" );
+	assert.strictEqual( yActual, yExpected, "failed: string '[1,2,3]'" );
+	assert.strictEqual( zActual, zExpected, "failed: malformed array in literal" );
+} );
+
+QUnit.test( "Runtime: array(..), parse shapes only", function test(assert){
+	var rExpected = {
+		type: "array",
+		contains: "int",
+		description: "int[]",
+	};
+	var pExpected = {
+		type: "array",
+		contains: "string",
+		description: "string[]",
+	};
+	var qExpected = {
+		type: "array",
+		contains: {
+			type: "array",
+			contains: "string",
+			description: "string[]",
+		},
+		description: "string[][]",
+	};
+	var tExpected = {
+		type: "array",
+		contains: [ "int", "string", ],
+		description: "<int,string>",
+	};
+	var sExpected = {
+		type: "array",
+		contains: {
+			type: "array",
+			contains: [ "int", "string", ],
+			description: "<int,string>",
+		},
+		description: "<int,string>[]",
+	};
+	var uExpected = {
+		type: "array", contains:
+		[
+			{
+				type: "array",
+				contains: "int",
+				description: "int[]",
+			},
+			"string",
+		],
+		description: "<int[],string>",
+	};
+	var vExpected = {
+		type: "array",
+		contains: {
+			type: "array",
+			contains: [
+				{
+					type: "array",
+					contains: {
+						type: "array",
+						contains: "int",
+						description: "int[]",
+					},
+					description: "int[][]",
+				},
+				{
+					type: "array",
+					contains: "string",
+					description: "string[]",
+				},
+			],
+			description: "<int[][],string[]>",
+		},
+		description: "<int[][],string[]>[]",
+	};
+	var wExpected = {
+		type: "array",
+		contains: {
+			type: "array",
+			contains: [
+				{
+					type: "array",
+					contains: [ "int", "string", ],
+					description: "<int,string>",
+				},
+				{
+					type: "array",
+					contains: "int",
+					description: "int[]",
+				},
+				{
+					type: "array",
+					contains: [
+						{
+							type: "array",
+							contains: {
+								type: "array",
+								contains: [
+									"int",
+									{
+										type: "array",
+										contains: "string",
+										description: "string[]",
+									},
+								],
+								description: "<int,string[]>",
+							},
+							description: "<int,string[]>[]",
+						},
+						"string",
+					],
+					description: "<<int,string[]>[],string>",
+				},
+			],
+			description: "<<int,string>,int[],<<int,string[]>[],string>>",
+		},
+		description: "<<int,string>,int[],<<int,string[]>[],string>>[]",
+	};
+
+	var rActual = array({ parseShapeOnly: true, v: ["int[ ]",], });
+	var pActual = array({ parseShapeOnly: true, v: [`string[
+	    ]`,], });
+	var qActual = array({ parseShapeOnly: true, v: ["string[][]",], });
+	var tActual = array({ parseShapeOnly: true, v: ["<int,string>",], });
+	var sActual = array({ parseShapeOnly: true, v: ["<int,string>[]",], });
+	var uActual = array({ parseShapeOnly: true, v: ["<int[],string>",], });
+	var vActual = array({ parseShapeOnly: true, v: ["<int[][],string[]>[]",], });
+	var wActual = array({ parseShapeOnly: true, v: ["<(<int,(string)>),int[],<(<int,string[]>)[],string>>[]",], });
+
+	assert.expect( 8 );
+	assert.deepEqual( rActual, rExpected, "parse: `int[]`" );
+	assert.deepEqual( pActual, pExpected, "parse: `string[]`" );
+	assert.deepEqual( qActual, qExpected, "parse: `string[][]`" );
+	assert.deepEqual( tActual, tExpected, "parse: `<int,string>`" );
+	assert.deepEqual( sActual, sExpected, "parse: `<int,string>[]`" );
+	assert.deepEqual( uActual, uExpected, "parse: `<int[],string>`" );
+	assert.deepEqual( vActual, vExpected, "parse: `<int[][],string[]>[]`" );
+	assert.deepEqual( wActual, wExpected, "parse: `<(<int,(string)>),int[],<(<int,string[]>)[],string>>[]`" );
+} );
+
+QUnit.test( "Runtime: array(..), shape parse failure", function test(assert){
+	var rExpected = "invalid 1";
+	var pExpected = "invalid 2";
+	var qExpected = "invalid 3";
+	var tExpected = "invalid 4";
+	var sExpected = "invalid 5";
+	var uExpected = "invalid 6";
+	var vExpected = "invalid 7";
+	var wExpected = "invalid 8";
+	var xExpected = "invalid 9";
+	var yExpected = "invalid 10";
+
+	var rActual;
+	try {
+		rActual = array({ parseShapeOnly: true, v: ["int",], });
+	}
+	catch (e) {
+		rActual = (/not an array/i.test(e) ? "invalid 1" : e.toString());
+	}
+	var pActual;
+	try {
+		pActual = array({ parseShapeOnly: true, v: ["(int) string",], });
+	}
+	catch (e) {
+		pActual = (/not allowed/i.test(e) ? "invalid 2" : e.toString());
+	}
+	var qActual;
+	try {
+		qActual = array({ parseShapeOnly: true, v: ["(int[]",], });
+	}
+	catch (e) {
+		qActual = (/unterminated/i.test(e) ? "invalid 3" : e.toString());
+	}
+	var tActual;
+	try {
+		tActual = array({ parseShapeOnly: true, v: ["(  <<int>)",], });
+	}
+	catch (e) {
+		tActual = (/not allowed/i.test(e) ? "invalid 4" : e.toString());
+	}
+	var sActual;
+	try {
+		sActual = array({ parseShapeOnly: true, v: ["[1,2,3]",], });
+	}
+	catch (e) {
+		sActual = (/shape missing/i.test(e) ? "invalid 5" : e.toString());
+	}
+	var uActual;
+	try {
+		uActual = array({ parseShapeOnly: true, v: ["<,int>",], });
+	}
+	catch (e) {
+		uActual = (/not allowed/i.test(e) ? "invalid 6" : e.toString());
+	}
+	var vActual;
+	try {
+		vActual = array({ parseShapeOnly: true, v: ["<int,>",], });
+	}
+	catch (e) {
+		vActual = (/not allowed/i.test(e) ? "invalid 7" : e.toString());
+	}
+	var wActual;
+	try {
+		wActual = array({ parseShapeOnly: true, v: ["<int,,string>",], });
+	}
+	catch (e) {
+		wActual = (/not allowed/i.test(e) ? "invalid 8" : e.toString());
+	}
+	var xActual;
+	try {
+		xActual = array({ parseShapeOnly: true, v: ["<>",], });
+	}
+	catch (e) {
+		xActual = (/not allowed/i.test(e) ? "invalid 9" : e.toString());
+	}
+	var yActual;
+	try {
+		yActual = array({ parseShapeOnly: true, v: ["int[string]",], });
+	}
+	catch (e) {
+		yActual = (/not an array/i.test(e) ? "invalid 10" : e.toString());
+	}
+
+	assert.expect( 10 );
+	assert.deepEqual( rActual, rExpected, "parse: `int`" );
+	assert.deepEqual( pActual, pExpected, "parse: `(int) string`" );
+	assert.deepEqual( qActual, qExpected, "parse: `(int[]`" );
+	assert.deepEqual( tActual, tExpected, "parse: `(  <<int>)`" );
+	assert.deepEqual( sActual, sExpected, "parse: `[1,2,3]`" );
+	assert.deepEqual( uActual, uExpected, "parse: `<,int>`" );
+	assert.deepEqual( vActual, vExpected, "parse: `<int,>`" );
+	assert.deepEqual( wActual, wExpected, "parse: `<int,,string>`" );
+	assert.deepEqual( xActual, xExpected, "parse: `<>`" );
+	assert.deepEqual( yActual, yExpected, "parse: `int[string]`" );
+} );
+
+QUnit.test( "Runtime: array(..), shape: int[]", function test(assert){
+	var rExpected = [1,2,3,];
+	var pExpected = [1,2,3,];
+	var qExpected = [1,2,3,];
+	var tExpected = [1,2,3,];
+	var sExpected = [];
+	var uExpected = "shape-mismatch 1";
+	var vExpected = "shape-mismatch 2";
+	var wExpected = "shape-mismatch 3";
+
+	var rActual = array`int[]``[1,2,3]`;
+	var pActual = array`int[]``${[1,2,3,]}`;
+	var qActual = array`int[]`` \n [1,2,3] \t `;
+	var tActual = array`int[]`` \n ${[1,2,3,]} \t `;
+	var sActual = array`any[]```;
+	var uActual;
+	try {
+		uActual = array`int[]``[1,"hello"]`;
+	}
+	catch (e) {
+		uActual = (/not of type/i.test(e) ? "shape-mismatch 1" : e.toString());
+	}
+	var vActual;
+	try {
+		vActual = array`int[]``${[1,"hello",]}`;
+	}
+	catch (e) {
+		vActual = (/not of type/i.test(e) ? "shape-mismatch 2" : e.toString());
+	}
+	var wActual;
+	try {
+		wActual = array`int[]``${[]}`;
+	}
+	catch (e) {
+		wActual = (/elements of type/i.test(e) ? "shape-mismatch 3" : e.toString());
+	}
+
+	assert.expect( 8 );
+	assert.deepEqual( rActual, rExpected, "literal" );
+	assert.deepEqual( pActual, pExpected, "value" );
+	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
+	assert.deepEqual( tActual, tExpected, "extra whitespace: value" );
+	assert.deepEqual( sActual, sExpected, "empty default" );
+	assert.strictEqual( uActual, uExpected, "shape-mismatch: mixed array literal" );
+	assert.strictEqual( vActual, vExpected, "shape-mismatch: mixed array expression" );
+	assert.strictEqual( wActual, wExpected, "shape-mismatch: empty array" );
+} );
+
+QUnit.test( "Runtime: array(..), shape: <int[][],string>[]", function test(assert){
+	var val = [[[[1,2,],[3,4,],],["hello",],],[[[5,6,],[7,8,],],["world",],],];
+	var rExpected = val;
+	var pExpected = val;
+	var qExpected = val;
+	var tExpected = val;
+	var sExpected = "failed 1";
+	var uExpected = "failed 2";
+	var vExpected = "failed 3";
+	var wExpected = "failed 4";
+	var xExpected = "failed 5";
+	var yExpected = [42,];
+
+	var rActual = array`<int[][],<string>>[]``[[[[1,2,],[3,4,],],["hello",],],[[[5,6,],[7,8,],],["world",],],]`;
+	var pActual = array`<int[][],<string>>[]``${val}`;
+	var qActual = array`<int[][],<string>>[]`` \n [[[[1,2,],[3,4,],],["hello",],],[[[5,6,],[7,8,],],["world",],],] \t `;
+	var tActual = array`<int[][],<string>>[]`` \n ${val} \t `;
+	var sActual;
+	try {
+		sActual = array`<int[][],<string>>[]``${[[[[1,2,],[3,4,],],],]}`;
+	}
+	catch (e) {
+		sActual = (/missing expected element/i.test(e) ? "failed 1" : e.toString());
+	}
+	var uActual;
+	try {
+		uActual = array`<int[][],<string>>[]``${[[[[1,2,],[3,4,],],["hello","world",],],]}`;
+	}
+	catch (e) {
+		uActual = (/beyond the tuple/i.test(e) ? "failed 2" : e.toString());
+	}
+	var vActual;
+	try {
+		vActual = array`<int[][],<string>>[]``${[[[[1,2,],3,],["hello","world",],],]}`;
+	}
+	catch (e) {
+		vActual = (/not an array/i.test(e) ? "failed 3" : e.toString());
+	}
+	var wActual;
+	try {
+		global.myint = "nothing";
+		wActual = array`<myint>``${[42,]}`;
+	}
+	catch (e) {
+		wActual = (/not of type/i.test(e) ? "failed 4" : e.toString());
+	}
+	finally {
+		delete global.myint;
+	}
+	var xActual;
+	try {
+		global.myint = int;
+		xActual = array`<myint>``${["hello",]}`;
+	}
+	catch (e) {
+		xActual = (/not of type/i.test(e) ? "failed 5" : e.toString());
+	}
+	finally {
+		delete global.myint;
+	}
+	var yActual;
+	try {
+		global.myint = int;
+		yActual = array`<myint>``${[42,]}`;
+	}
+	catch (e) {
+		yActual = (/not of type/i.test(e) ? "failed 6" : e.toString());
+	}
+	finally {
+		delete global.myint;
+	}
+
+	assert.expect( 10 );
+	assert.deepEqual( rActual, rExpected, "literal" );
+	assert.deepEqual( pActual, pExpected, "value" );
+	assert.deepEqual( qActual, qExpected, "extra whitespace: literal" );
+	assert.deepEqual( tActual, tExpected, "extra whitespace: value" );
+	assert.deepEqual( sActual, sExpected, "failed: missing tuple element" );
+	assert.deepEqual( uActual, uExpected, "failed: extra tuple element" );
+	assert.deepEqual( vActual, vExpected, "failed: number instead of array" );
+	assert.deepEqual( wActual, wExpected, "failed: no 'myint' type" );
+	assert.deepEqual( xActual, xExpected, "failed: 'myint' (as 'int' alias)" );
+	assert.deepEqual( yActual, yExpected, "'myint' (as 'int' alias)" );
 } );
 
 QUnit.test( "Runtime: object(..)", function test(assert){
