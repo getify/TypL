@@ -1037,10 +1037,10 @@ QUnit.test( "Runtime: array(..), shape: int[]", function test(assert){
 	var wExpected = "shape-mismatch 3";
 
 	var rActual = array`int[]``[1,2,3]`;
-	var pActual = array`int[]``${[1,2,3,]}`;
+	var pActual = array`int[+]``${[1,2,3,]}`;
 	var qActual = array`int[]`` \n [1,2,3] \t `;
 	var tActual = array`int[]`` \n ${[1,2,3,]} \t `;
-	var sActual = array`any[]```;
+	var sActual = array`int[]```;
 	var uActual;
 	try {
 		uActual = array`int[]``[1,"hello"]`;
@@ -1057,10 +1057,10 @@ QUnit.test( "Runtime: array(..), shape: int[]", function test(assert){
 	}
 	var wActual;
 	try {
-		wActual = array`int[]``${[]}`;
+		wActual = array`int[+]``${[]}`;
 	}
 	catch (e) {
-		wActual = (/elements of type/i.test(e) ? "shape-mismatch 3" : e.toString());
+		wActual = (/element\(s\) of type/i.test(e) ? "shape-mismatch 3" : e.toString());
 	}
 
 	assert.expect( 8 );
@@ -1088,7 +1088,7 @@ QUnit.test( "Runtime: array(..), shape: <int[][],string>[]", function test(asser
 	var yExpected = [42,];
 
 	var rActual = array`<int[][],<string>>[]``[[[[1,2,],[3,4,],],["hello",],],[[[5,6,],[7,8,],],["world",],],]`;
-	var pActual = array`<int[][],<string>>[]``${val}`;
+	var pActual = array`<int[+][],<string>>[+]``${val}`;
 	var qActual = array`<int[][],<string>>[]`` \n [[[[1,2,],[3,4,],],["hello",],],[[[5,6,],[7,8,],],["world",],],] \t `;
 	var tActual = array`<int[][],<string>>[]`` \n ${val} \t `;
 	var sActual;
