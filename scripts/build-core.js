@@ -22,13 +22,13 @@ var fs = require("fs"),
 
 // ***************************
 
-console.log("*** Building Typl ***");
+console.log("*** Building TypL ***");
 
 // read version number from package.json
 var packageJSON = JSON.parse(
 	fs.readFileSync(
 		path.join(ROOT_DIR,"package.json"),
-		{ encoding: "utf8" }
+		{ encoding: "utf8", }
 	)
 );
 var version = packageJSON.version;
@@ -36,7 +36,7 @@ var version = packageJSON.version;
 // read copyright-header text, render with version and year
 var copyrightHeader = fs.readFileSync(
 	path.join(SRC_DIR,"copyright-header.txt"),
-	{ encoding: "utf8" }
+	{ encoding: "utf8", }
 ).replace(/`/g,"");
 copyrightHeader = Function("version","year",`return \`${copyrightHeader}\`;`)( version, year );
 
@@ -49,7 +49,7 @@ try {
 }
 catch (err) { }
 
-for (let [idx,SRC] of LIB_SRC.entries()) {
+for (let [idx,SRC,] of LIB_SRC.entries()) {
 	let DIST = LIB_DIST[idx];
 
 	console.log(`Building: ${DIST}`);
@@ -57,18 +57,18 @@ for (let [idx,SRC] of LIB_SRC.entries()) {
 	try {
 		let result = "";
 
-		result += fs.readFileSync(SRC,{ encoding: "utf8" });
+		result += fs.readFileSync(SRC,{ encoding: "utf8", });
 
 		result = ugly.minify(result,{
 			mangle: {
-				keep_fnames: true
+				keep_fnames: true,
 			},
 			compress: {
-				keep_fnames: true
+				keep_fnames: true,
 			},
 			output: {
-				comments: /^!/
-			}
+				comments: /^!/,
+			},
 		});
 
 		// was compression successful?
@@ -81,7 +81,7 @@ for (let [idx,SRC] of LIB_SRC.entries()) {
 		result = `${copyrightHeader}${result.code}`;
 
 		// write dist
-		fs.writeFileSync( DIST, result, { encoding: "utf8" } );
+		fs.writeFileSync( DIST, result, { encoding: "utf8", } );
 	}
 	catch (err) {
 		console.error(err);

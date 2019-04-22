@@ -1,6 +1,6 @@
-# Typl
+# TypL
 
-Coming Soon
+The JavaScript Type Linter. Coming Soon.
 
 ## License
 

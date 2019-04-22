@@ -1,7 +1,7 @@
 {
 	"name": "typl",
 	"version": "0.3.0",
-	"description": "Optional type annotations and type-check linting",
+	"description": "Optional type annotations and type-check linting in standard JS",
 	"main": "./lib/index.js",
 	"scripts": {
 		"test": "node scripts/node-tests.js",
@@ -27,15 +27,15 @@
 		"qunit": "~2.9.1",
 		"terser": "~3.14.1"
 	},
-	"repository": "getify/Typl",
+	"repository": "getify/TypL",
 	"keywords": [
 		"types"
 	],
 	"bugs": {
-		"url": "https://github.com/getify/Typl/issues",
+		"url": "https://github.com/getify/TypL/issues",
 		"email": "getify@gmail.com"
 	},
-	"homepage": "https://github.com/getify/Typl",
+	"homepage": "https://github.com/getify/TypL",
 	"author": "Kyle Simpson <getify@gmail.com>",
 	"license": "MIT"
 }

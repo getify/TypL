@@ -13,11 +13,11 @@ function begin(details){
 	printEnvNotification();
 
 	if (details.totalTests > 0) {
-		console.log(`Typl Test Suite (${details.totalTests})`);
+		console.log(`TypL Test Suite (${details.totalTests})`);
 		console.log("");
 	}
 	else {
-		console.log(`Typl Test Suite: empty!`);
+		console.log("TypL Test Suite: empty!");
 		process.exit(1);
 	}
 }
@@ -26,7 +26,7 @@ function testLog(details) {
 	var testId = details.testId;
 
 	testLogEntries[testId] = testLogEntries[testId] || {};
-	testLogEntries[testId][details.message] = {...details};
+	testLogEntries[testId][details.message] = { ...details, };
 }
 
 function testDone(results){
@@ -36,7 +36,7 @@ function testDone(results){
 		console.log(`Failed: '${results.name}' (${results.failed}/${results.total})`);
 		for (let i = 0; i < results.assertions.length; i++) {
 			if (results.assertions[i].result === false) {
-				let { message, expected, actual, source } = testLogEntries[testId][results.assertions[i].message];
+				let { message, expected, actual, source, } = testLogEntries[testId][results.assertions[i].message];
 				console.log(`  ${message}`);
 				// is there a JS exception stack trace included?
 				if (source && /^\w*Error: .+/.test(source)) {
