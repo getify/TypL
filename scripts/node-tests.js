@@ -26,5 +26,6 @@ global.QUnit = require("qunit");
 require(path.join("..","tests","qunit.config.js"));
 require(path.join("..","tests","tests.runtime.js"));
 require(path.join("..","tests","tests.checker.js"));
+require(path.join("..", "tests", "tests.checker.arrays.js"));
 
 QUnit.start();
