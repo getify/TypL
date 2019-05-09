@@ -9,6 +9,11 @@ All code and documentation are (c) 2019 Kyle Simpson and released under the [MIT
 ## Run
 
 ```js
+bin/typl --file=./test-snippets/code.js
+```
+or
+
+```js
 node ./lib/cli.js --file=./test-snippets/code.js
 ```
 
