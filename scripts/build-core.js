@@ -47,7 +47,9 @@ copyrightHeader = Function("version","year",`return \`${copyrightHeader}\`;`)( v
 try {
 	fs.mkdirSync(DIST_DIR,0o755);
 }
-catch (err) { }
+catch (err) {
+   throw new Error(err);
+}
 
 for (let [idx,SRC,] of LIB_SRC.entries()) {
 	let DIST = LIB_DIST[idx];
