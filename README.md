@@ -1,6 +1,6 @@
 # TypL
 
-The JavaScript ***Typ***e ***L***inter.
+The ***Typ***e ***L***inter for JS.
 
 ## Overview
 
